@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  sat-order-payment-service:
+    build: ./sat-order-payment-service
+    ports: ["3000:3000"]
+  sat-partner-mock-service:
+    build: ./sat-partner-mock-service
+    ports: ["3002:3002"]
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: ["5672:5672", "15672:15672"]

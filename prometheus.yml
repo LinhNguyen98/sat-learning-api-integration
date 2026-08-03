@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'sat-services'
+    static_configs:
+      - targets: ['sat-order-payment-service:3000', 'sat-partner-mock-service:3002']
