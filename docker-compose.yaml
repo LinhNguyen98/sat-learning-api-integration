@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: ["5672:5672", "15672:15672"]
+  kong:
+    image: kong:3.4
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+    volumes:
+      - ./kong.yml:/usr/local/kong/declarative/kong.yml
+    ports: ["8000:8000", "8001:8001"]
+  order-service:
+    build: ./services/order-service
+    ports: ["3000:3000"]
+    environment:
+      - PARTNER_MOCK_URL=http://partner-mock-service:3002
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+  payment-service:
+    build: ./services/payment-service
+    ports: ["3001:3001"]
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+  partner-mock-service:
+    build: ./services/partner-mock-service
+    ports: ["3002:3002"]

@@ -1,0 +1,13 @@
+_format_version: "2.1"
+_transform: true
+services:
+  - name: order-service
+    url: http://order-service:3000
+    routes:
+      - name: order-routes
+        paths: [/api/v1/orders]
+  - name: payment-service
+    url: http://payment-service:3001
+    routes:
+      - name: payment-routes
+        paths: [/api/v1/payments]
