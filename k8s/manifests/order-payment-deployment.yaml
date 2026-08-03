@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sat-order-payment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sat-order-payment
+  template:
+    metadata:
+      labels:
+        app: sat-order-payment
+    spec:
+      containers:
+      - name: order-payment
+        image: sat-order-payment-service:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sat-order-payment-service
+spec:
+  selector:
+    app: sat-order-payment
+  ports:
+  - port: 3000
+    targetPort: 3000
