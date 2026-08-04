@@ -33,6 +33,7 @@ Tài liệu mô tả chi tiết thiết kế, nghiệp vụ và hạ tầng kỹ
 
 ### 2.1 Sơ đồ kiến trúc tổng quan
 
+```text
 [ Client / Web SAT Platform ]
              │
              ▼
@@ -51,6 +52,7 @@ Tài liệu mô tả chi tiết thiết kế, nghiệp vụ và hạ tầng kỹ
     ▼                                                                 ▼
 [ Prometheus (9090) + Grafana (3001) ]            [ EFK Stack (FluentBit / ES / Kibana) ]
      (Metrics Monitoring)                                  (Centralized Logging)
+```
 
 ### 2.2 Danh sách Dịch vụ & Hạ tầng kỹ thuật
 
@@ -74,35 +76,43 @@ Tài liệu mô tả chi tiết thiết kế, nghiệp vụ và hạ tầng kỹ
   - `Content-Type: application/json`
   - `Authorization: Bearer <JWT_TOKEN_FROM_KEYCLOAK>`
 - **Request Body**:
+```json
 {
   "student_id": "STU12345",
   "course_code": "SAT-MATH-PRO",
   "amount": 1500000
 }
+```
 - **Response (201 Created)**:
+```json
 {
   "order_id": "ORD-SAT-9981",
   "status": "PENDING",
   "payment_url": "http://localhost:3002/partner/v1/checkout?order_id=ORD-SAT-9981",
   "created_at": "2026-08-04T08:00:00Z"
 }
+```
 
 ### 3.2 Webhook Nhận Kết Quả Thanh Toán Từ Đối Tác
 - **Endpoint**: `POST /api/v1/payments/webhook`
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
+```json
 {
   "order_id": "ORD-SAT-9981",
   "transaction_id": "TXN-887766",
   "status": "SUCCESS",
   "signature": "a1b2c3d4e5f6"
 }
+```
 - **Response (200 OK)**:
+```json
 {
   "message": "Payment processed successfully",
   "order_id": "ORD-SAT-9981",
   "status": "PAID"
 }
+```
 
 ---
 
@@ -130,6 +140,7 @@ Tài liệu mô tả chi tiết thiết kế, nghiệp vụ và hạ tầng kỹ
 
 ## 5. CẤU TRÚC THƯ MỤC DỰ ÁN (PROJECT STRUCTURE)
 
+```text
 sat-learning-api-integration/
 ├── sat-order-payment-service/       # Microservice Quản lý đơn hàng SAT & Event Publisher
 │   ├── src/
@@ -148,3 +159,4 @@ sat-learning-api-integration/
 ├── README.md                       # Tài liệu tổng quan dự án
 ├── push_to_github.bat               # Script tự động đẩy code lên GitHub (Windows Batch)
 └── push_to_github.ps1               # Script tự động đẩy code lên GitHub (PowerShell)
+```
