@@ -1,0 +1,56 @@
+{
+  "id": "sat-learning",
+  "realm": "sat-learning",
+  "enabled": true,
+  "sslRequired": "none",
+  "components": {
+    "org.keycloak.keys.KeyProvider": [
+      {
+        "name": "rsa-generated",
+        "providerId": "rsa-generated",
+        "config": {
+          "priority": [
+            "100"
+          ],
+          "publicKey": [
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0IlningO1nOiKoTTJVsVHOj2uv1cJUGBIqQtOd6z0y5x0S0DTpT0lf5+XeSTrPJ6KWWrflLlfj0Z+jLBNeim/RToWmNvLWLvYqzGoPuiUVz2y1z7cFMngqN81+ev9lXnUrC0qv/LU1daLXnH9RFxCfGJ6ZwCUTIWBHeaogFX/20YOSJOPDbrBjDaKI2hdge+HVk0c5QZvg5Yr4JTVhoteqgmWtkcLbRJbbRZ1E/rid6cA56UMlmvx4EL/vQ+QUPFrD9/vwOoM8oGDH9Yu37sfrelsLKm7IJ5G4bSDW3cTEi7pyQ9lMNEPtfRW0Y/sjmtu52JfhlfCHrj/Fbh4R21xwIDAQAB"
+          ],
+          "privateKey": [
+            "MIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQDQiWeKeA7Wc6IqhNMlWxUc6Pa6/VwlQYEipC053rPTLnHRLQNOlPSV/n5d5JOs8nopZat+UuV+PRn6MsE16Kb9FOhaY28tYu9irMag+6JRXPbLXPtwUyeCo3zX56/2VedSsLSq/8tTV1otecf1EXEJ8YnpnAJRMhYEd5qiAVf/bRg5Ik48NusGMNoojaF2B74dWTRzlBm+DlivglNWGi16qCZa2RwttElttFnUT+uJ3pwDnpQyWa/HgQv+9D5BQ8WsP3+/A6gzygYMf1i7fux+t6WwsqbsgnkbhtINbdxMSLunJD2Uw0Q+19FbRj+yOa27nYl+GV8IeuP8VuHhHbXHAgMBAAECgf8UXVa/LvpD9wbfIBl+jGaDbDysBhH5kWwK9f10qUrmVKLIypyIEAPSoge1I51IRmWnpUYaD/5ZVZ4z0MENgqrMDD6klRFGXWMDP9wl3Gz9hRaUxX/IeFZja5PFgdqtM7ZjXN5H1LMGcIFd74aXaByh2/Sb26BeTYXY6dUv/PGa/98x1jZ1vM0jZ4dIg4oED2QDN9mVayoecymVAR5/5G9o8gaDZnIk6NTKeEfpfDe+e4bPYbifzf00T11MdxYQopJnCNgfJ2Xga7QQ6LjBWAPHbsMJj+tWEE1DJ2YcHSNaXKmC9GiZTELpBVG2ny3FNDRc7mHFFHKtPICDOsk3uVECgYEA8XezGOWvP23Q1hmkK6He850qlfVF4wtkBnXNUlVrBsomgPKkMpLHAmolq3Xxwp7NWI3Gbk9hBmkPR+97BGmZRPyIXYJzF7C7ltRCTp72M1vqGqjOrjLumg6WtoqE9gX7i8Na062XCjPZqgVDs0JGV7a2QhL6oqzGgKcjbp0XjZkCgYEA3RZWjnXCb21O8sbMjx/xbZiq6DPgJvQN1wTMizPETI3jlnhUDP2wFuHBJVaFymkEQHbId77d5reKqVjl7LvM8PEvfMvxpK3fiPSG5Ja+Rzzw9tucvFNaI2RudPiKM2okEncR6VrRf5d2ry2nfi6Xbu8InGZkL32oUWxt1RXXul8CgYAX96KeQQYRDKxi4+6oqguAMMRuWAcUzyehgIXduz7BUMVbnTnxDyKTucd9alqRz8NgG8prXpOp2Dm9EScru/OLpmk+ptkXq+IiyXS/awXS+TeWZ9UD82g9gF8zRTKHXPan278jLaLFT3o2ZwlePKDQygDzNAEOromRcYWR0CPrWQKBgD4yW5VmUZXRVYV9Ie0d2mivq1z5wxSSUhZsdjKvFIlI3X7mSRcCg3hceF7NsYPY+WY9RHZTjs+qUOsFZGGuD6C06Vwdb9SZSaqYyB4kvlECNvPronNkq5YLWfu0NAT01kMPlk1kzE0tyijMGjOoXdfKjUyajZLCsgh+DYQFyhPXAoGAOga8Os9YYPXed/1mQnbj47zi85xF+HLnh6q6WS8vsDOrw2oKhqP5p3m1tPM+cGy9tqlonZA9eC4bfsilnnlKDQT6SmdiWAK60sVXHH1S25L7SSW2S7LZRw3ZXTgDOaaiQFlfRvWEB1G8OcUHRyA649JSoAtNrqMZL+5tjhc4bd8="
+          ]
+        }
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "sat-platform",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": [
+        "*"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "student1",
+      "enabled": true,
+      "email": "student1@satlearning.edu.vn",
+      "firstName": "Student",
+      "lastName": "One",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ]
+    }
+  ]
+}

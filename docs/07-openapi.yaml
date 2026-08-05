@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: SAT Learning Course Enrollment & Payment API
+  version: 1.0.0
+  description: API contract definitions for the SAT online learning payment processing.
+paths:
+  /api/v1/orders:
+    post:
+      summary: Create a course order
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - student_id
+                - course_code
+                - amount
+              properties:
+                student_id:
+                  type: string
+                  example: "STU-9988"
+                course_code:
+                  type: string
+                  example: "SAT-MATH-PRO"
+                amount:
+                  type: number
+                  example: 1500000
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                  status:
+                    type: string
+                  payment_url:
+                    type: string
+                  created_at:
+                    type: string
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /api/v1/orders/{order_id}:
+    get:
+      summary: Get order details by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detailed order state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                  student_id:
+                    type: string
+                  course_code:
+                    type: string
+                  amount:
+                    type: number
+                  status:
+                    type: string
+                  transaction_id:
+                    type: string
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /partner/v1/checkout:
+    post:
+      summary: Register payment checkout session with partner Mock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order_id
+                - amount
+              properties:
+                order_id:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        '201':
+          description: Partner session registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction_id:
+                    type: string
+                  status:
+                    type: string
+                  checkout_url:
+                    type: string
+
+  /api/v1/payments/webhook:
+    post:
+      summary: Async callback webhook for partner status updates
+      parameters:
+        - name: X-Webhook-Signature
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order_id
+                - transaction_id
+                - status
+                - amount
+              properties:
+                order_id:
+                  type: string
+                transaction_id:
+                  type: string
+                status:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        '200':
+          description: Acknowledged payment state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  order_id:
+                    type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    401Unauthorized:
+      description: Authentication failed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+              title:
+                type: string
+              status:
+                type: integer
+              detail:
+                type: string

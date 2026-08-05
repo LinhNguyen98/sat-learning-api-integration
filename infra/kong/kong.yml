@@ -1,0 +1,69 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: sat-order-service
+    url: http://sat-order-payment-service:3000
+    routes:
+      - name: order-create-route
+        paths:
+          - /api/v1/orders$
+        methods:
+          - POST
+      - name: order-detail-route
+        paths:
+          - /api/v1/orders/
+        methods:
+          - GET
+      - name: webhook-route
+        paths:
+          - /api/v1/payments/webhook
+        methods:
+          - POST
+
+  - name: sat-partner-mock-service
+    url: http://sat-partner-mock-service:3002
+    routes:
+      - name: partner-routes
+        paths:
+          - /partner/v1/checkout
+
+consumers:
+  - username: sat-student-consumer
+    jwt_secrets:
+      - key: "http://keycloak:8080/realms/sat-learning"
+        algorithm: RS256
+        rsa_public_key: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0IlningO1nOiKoTTJVsV
+          HOj2uv1cJUGBIqQtOd6z0y5x0S0DTpT0lf5+XeSTrPJ6KWWrflLlfj0Z+jLBNeim
+          /RToWmNvLWLvYqzGoPuiUVz2y1z7cFMngqN81+ev9lXnUrC0qv/LU1daLXnH9RFx
+          CfGJ6ZwCUTIWBHeaogFX/20YOSJOPDbrBjDaKI2hdge+HVk0c5QZvg5Yr4JTVhot
+          eqgmWtkcLbRJbbRZ1E/rid6cA56UMlmvx4EL/vQ+QUPFrD9/vwOoM8oGDH9Yu37s
+          frelsLKm7IJ5G4bSDW3cTEi7pyQ9lMNEPtfRW0Y/sjmtu52JfhlfCHrj/Fbh4R21
+          xwIDAQAB
+          -----END PUBLIC KEY-----
+      - key: "http://localhost:8080/realms/sat-learning"
+        algorithm: RS256
+        rsa_public_key: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0IlningO1nOiKoTTJVsV
+          HOj2uv1cJUGBIqQtOd6z0y5x0S0DTpT0lf5+XeSTrPJ6KWWrflLlfj0Z+jLBNeim
+          /RToWmNvLWLvYqzGoPuiUVz2y1z7cFMngqN81+ev9lXnUrC0qv/LU1daLXnH9RFx
+          CfGJ6ZwCUTIWBHeaogFX/20YOSJOPDbrBjDaKI2hdge+HVk0c5QZvg5Yr4JTVhot
+          eqgmWtkcLbRJbbRZ1E/rid6cA56UMlmvx4EL/vQ+QUPFrD9/vwOoM8oGDH9Yu37s
+          frelsLKm7IJ5G4bSDW3cTEi7pyQ9lMNEPtfRW0Y/sjmtu52JfhlfCHrj/Fbh4R21
+          xwIDAQAB
+          -----END PUBLIC KEY-----
+
+plugins:
+  - name: jwt
+    route: order-create-route
+    config:
+      claims_to_verify:
+        - exp
+  - name: jwt
+    route: order-detail-route
+    config:
+      claims_to_verify:
+        - exp
