@@ -1,48 +1,61 @@
-# 🎓 SAT Learning - Partner Integration Architecture & API Lab
+# SAT Learning - Partner Integration Architecture & API Lab
 
-Dự án xây dựng hệ thống Microservices tích hợp thanh toán khóa học SAT trực tuyến, đáp ứng đầy đủ các yêu cầu kiến trúc từ Cơ bản đến **Nâng cao (Advanced)**.
-
----
-
-## 1. BUSINESS DOMAIN & INTEGRATION WORKFLOW
-
-* **Domain**: EdTech Platform (Luyện thi SAT Trực tuyến).
-* **Workflow**: 
-  1. Học viên chọn và đăng ký khóa học SAT.
-  2. `Order Service` tạo đơn hàng ở trạng thái `PENDING`.
-  3. Chuyển hướng học viên sang `Partner Payment Mock Service`.
-  4. Partner xử lý và trả kết quả về qua **Webhook**.
-  5. `Payment Service` nhận kết quả và phát sự kiện `payment_completed` vào **RabbitMQ**.
-  6. `Order Service` lắng nghe RabbitMQ và cập nhật trạng thái đơn sang `PAID` để kích hoạt khóa học.
+Dự án Capstone nghiên cứu thiết kế, tích hợp hệ thống đăng ký và thanh toán khóa học SAT trực tuyến qua API Gateway (Kong), Identity Provider (Keycloak), và Message Broker (RabbitMQ).
 
 ---
 
-## 2. TECHNICAL STACK & ADVANCED IMPLEMENTATION
+## 📁 Cấu trúc thư mục dự án
 
-### 🏛️ Gateway & Identity Provider
-* **Kong API Gateway**: Quản lý, điều hướng và cân bằng tải tập trung cho các API endpoints (Port `8000` / `8001`).
-* **Keycloak (OAuth2/OIDC)**: Đóng vai trò Identity Provider (Port `8080`), tích hợp JWT Authentication plugin trên Kong để bảo vệ tài nguyên API.
-
-### ⚙️ Microservices & Message Broker
-* **Services**: Express.js (`sat-order-payment-service`, `sat-partner-mock-service`).
-* **Message Broker (RabbitMQ)**: Xử lý truyền tin bất đồng bộ (Asynchronous Event-Driven Messaging) giữa các dịch vụ qua AMQP protocol (Port `5672` / `15672`).
-
-### ☸️ Deployment Infrastructure
-* **Docker Compose**: Hỗ trợ chạy local toàn bộ môi trường development chỉ với 1 lệnh.
-* **Kubernetes (K8s) Manifests**: Đóng gói sẵn trọn bộ file triển khai sản xuất trong thư mục `k8s/manifests/` (Deployments, Services, ConfigMaps, Ingress cho Kong, Keycloak, RabbitMQ và các Services).
-
-### 📊 Observability Solution
-* **Prometheus + Grafana**: Thu thập metrics (`/metrics`) từ Microservices & Kong Gateway, trực quan hóa sức khỏe hệ thống qua Dashboard (`k8s/observability/prometheus-grafana-k8s.yaml`).
-* **EFK Stack (FluentBit / Elasticsearch / Kibana)**: Cấu hình gom log tập trung từ các container/pod để phục vụ tracing & debugging.
+```
+sat-learning-api-integration/
+├── docs/                             # Tài liệu đặc tả chuẩn bài Lab
+│   ├── 01-Business-Requirement.md    # Mục tiêu nghiệp vụ
+│   ├── 02-Business-Workflow.md       # Sơ đồ quy trình (Sequence diagram)
+│   ├── 03-System-Architecture.md     # Sơ đồ kiến trúc kết nối S2S
+│   ├── 04-Database-Design.md         # Thiết kế dữ liệu & State Machine
+│   ├── 05-API-Design.md              # Đặc tả tham số API REST
+│   ├── 06-Partner-Integration.md     # Tích hợp cổng thanh toán & HMAC signature
+│   ├── 07-openapi.yaml               # Đặc tả API chuẩn OpenAPI 3.0
+│   ├── 08-Technical-Stack.md         # Chi tiết ngăn xếp công nghệ
+│   ├── 09-Implementation-Guide.md    # Hướng dẫn cài đặt & Kiểm thử
+│   ├── 10-Kong-Keycloak-Integration.md # Thiết kế cấu hình Gateway & IdP
+│   ├── 11-Kubernetes-Deployment.md   # Hướng dẫn deploy cụm K8s
+│   ├── 12-RabbitMQ-Integration.md    # Cấu hình hàng đợi RabbitMQ & DLQ
+│   ├── 13-Observability.md           # Giám sát Prometheus & Grafana
+│   ├── architecture-review.md        # Checklist 15 tiêu chí kiến trúc
+│   └── integration-mapping.md        # Bảng phân loại EVNICT đối tác
+├── infra/                            # Cấu hình cài đặt hạ tầng
+│   ├── keycloak/                     # Realm export (Keycloak)
+│   └── kong/                         # Cấu hình định tuyến Gateway (Kong)
+├── k8s/                              # File manifests triển khai Kubernetes
+│   ├── 00-namespace.yaml
+│   ├── 01-configmap-secrets.yaml
+│   ├── 02-rabbitmq.yaml
+│   ├── 03-order-api.yaml
+│   ├── 04-mocks.yaml
+│   ├── 05-kong-ingress.yaml
+│   └── 06-observability.yaml
+├── monitoring/                       # Giám sát Prometheus & Grafana
+│   └── prometheus.yml
+├── src/                              # Mã nguồn dịch vụ microservices
+│   ├── sat-order-payment-service/    # Service Quản lý đơn hàng SAT
+│   └── sat-partner-mock-service/     # Service Giả lập cổng thanh toán đối tác
+├── .env.example                      # File mẫu môi trường cấu hình
+├── docker-compose.yml                # Docker compose khởi động
+└── test_api.py                       # Python script kiểm thử tự động
+```
 
 ---
 
-## 3. HƯỚNG DẪN KHỞI ĐỘNG (RUN & DEPLOY)
+## 🚀 Khởi chạy nhanh dự án
 
-### Triển khai trên Kubernetes (K8s Cluster)
+### 1. Khởi động toàn bộ Container Stack
 ```bash
-# 1. Apply toàn bộ hạ tầng & Microservices
-kubectl apply -f k8s/manifests/
+docker compose up -d --build
+```
 
-# 2. Apply hạ tầng Giám sát Observability
-kubectl apply -f k8s/observability/
+### 2. Kiểm thử luồng tự động
+```bash
+python test_api.py
+```
+Script này tự động kiểm tra xác thực JWT, gọi API tạo đơn hàng qua Kong Gateway, trigger webhook thanh toán từ đối tác và verify cập nhật đơn hàng thành công qua RabbitMQ.
